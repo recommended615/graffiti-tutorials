@@ -1,0 +1,342 @@
+/* ===========================
+   GRAFFITI TUTORIALS - CSS
+   =========================== */
+
+:root {
+  --color-bg: #fff;
+  --color-text: #1a1a1a;
+  --color-primary: #ff5c35;
+  --color-primary-dark: #e04520;
+  --color-accent: #ffe100;
+  --color-light: #f7f5f0;
+  --color-border: #e0ddd8;
+  --font-main: 'Segoe UI', Arial, sans-serif;
+  --radius: 12px;
+  --max-width: 1100px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+header {
+  background: #fff;
+  border-bottom: 2px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+}
+
+nav a {
+  margin-left: 28px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: var(--color-primary);
+}
+
+/* ===========================
+   HERO
+   =========================== */
+.hero {
+  background: linear-gradient(135deg, #ff5c35 0%, #ff8c42 60%, #ffe100 100%);
+  color: #fff;
+  padding: 100px 0 80px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.hero p {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  max-width: 600px;
+  margin: 0 auto 36px;
+  opacity: 0.95;
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  background: var(--color-text);
+  color: #fff;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+
+.hero .btn {
+  background: #fff;
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  padding: 10px 24px;
+  font-size: 0.95rem;
+}
+
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.btn-phone {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+/* ===========================
+   SERVICIOS
+   =========================== */
+.servicios {
+  padding: 80px 0;
+  background: var(--color-light);
+}
+
+.servicios h2 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 48px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+}
+
+.card-img.placeholder {
+  font-size: 3rem;
+  background: var(--color-light);
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--color-border);
+  /* Replace with: background-image: url('images/your-photo.jpg'); background-size: cover; */
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.card p {
+  color: #555;
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+/* ===========================
+   SOBRE NOSOTROS
+   =========================== */
+.sobre {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.sobre-inner {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+
+.placeholder-large {
+  font-size: 5rem;
+  background: var(--color-light);
+  min-width: 300px;
+  height: 300px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--color-border);
+  flex-shrink: 0;
+  /* Replace with: background-image: url('images/about.jpg'); background-size: cover; */
+}
+
+.sobre-text h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.sobre-text p {
+  color: #555;
+  margin-bottom: 14px;
+  font-size: 1rem;
+}
+
+/* ===========================
+   CONTACTO
+   =========================== */
+.contacto {
+  padding: 80px 0;
+  background: var(--color-light);
+  text-align: center;
+}
+
+.contacto h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.contacto p {
+  color: #555;
+  font-size: 1.05rem;
+  max-width: 500px;
+  margin: 0 auto 36px;
+}
+
+.contact-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+footer {
+  background: var(--color-text);
+  color: #aaa;
+  padding: 32px 0;
+  text-align: center;
+}
+
+footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+footer p {
+  font-size: 0.9rem;
+}
+
+.social {
+  display: flex;
+  gap: 20px;
+}
+
+.social a {
+  color: #aaa;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.social a:hover {
+  color: #fff;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+  .sobre-inner {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .placeholder-large {
+    min-width: unset;
+    width: 100%;
+    height: 220px;
+  }
+
+  nav {
+    display: none;
+  }
+}
