@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Graffiti Tutorials Valencia</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 </head>
 <body>
 
@@ -17,6 +18,14 @@
         <a href="#sobre-nosotros">Nosotros</a>
         <a href="#contacto">Contacto</a>
       </nav>
+      <div class="wallet-area">
+        <button id="walletBtn" class="btn btn-wallet" onclick="connectWallet()">🔮 Conectar Wallet</button>
+        <div id="walletInfo" class="wallet-info" style="display:none;">
+          <span id="walletAddress" class="wallet-address"></span>
+          <span id="walletBalance" class="wallet-balance"></span>
+          <button class="btn btn-wallet-disconnect" onclick="disconnectWallet()">✕</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -99,5 +108,57 @@
     </div>
   </footer>
 
+<script>
+  const SOLANA_RPC = 'https://api.mainnet-beta.solana.com';
+
+  async function connectWallet() {
+    if (!window.solana || !window.solana.isPhantom) {
+      alert('Phantom Wallet no encontrado.\nInstálalo en https://phantom.app');
+      return;
+    }
+    try {
+      const resp = await window.solana.connect();
+      const pubkey = resp.publicKey.toString();
+      await updateWalletUI(pubkey);
+    } catch (err) {
+      console.error('Wallet connect error:', err);
+    }
+  }
+
+  async function updateWalletUI(pubkey) {
+    const short = pubkey.slice(0, 4) + '...' + pubkey.slice(-4);
+    document.getElementById('walletAddress').textContent = short;
+    document.getElementById('walletBalance').textContent = '⏳';
+    document.getElementById('walletBtn').style.display = 'none';
+    document.getElementById('walletInfo').style.display = 'flex';
+
+    try {
+      const connection = new solanaWeb3.Connection(SOLANA_RPC, 'confirmed');
+      const pk = new solanaWeb3.PublicKey(pubkey);
+      const lamports = await connection.getBalance(pk);
+      const sol = (lamports / solanaWeb3.LAMPORTS_PER_SOL).toFixed(4);
+      document.getElementById('walletBalance').textContent = sol + ' SOL';
+    } catch (err) {
+      document.getElementById('walletBalance').textContent = '? SOL';
+      console.error('Balance fetch error:', err);
+    }
+  }
+
+  function disconnectWallet() {
+    if (window.solana && window.solana.disconnect) window.solana.disconnect();
+    document.getElementById('walletBtn').style.display = 'inline-block';
+    document.getElementById('walletInfo').style.display = 'none';
+  }
+
+  // Auto-reconnect if already connected
+  window.addEventListener('load', async () => {
+    if (window.solana && window.solana.isPhantom) {
+      try {
+        const resp = await window.solana.connect({ onlyIfTrusted: true });
+        await updateWalletUI(resp.publicKey.toString());
+      } catch (_) {}
+    }
+  });
+</script>
 </body>
 </html>
