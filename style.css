@@ -210,6 +210,17 @@ nav a:hover {
   font-size: 1.1rem;
 }
 
+.btn-game {
+  background: #ffe100;
+  color: #1a1a1a;
+  font-size: 1.05rem;
+  margin-top: 14px;
+}
+
+.btn-game:hover {
+  background: #e6cc00;
+}
+
 .btn-outline {
   background: transparent;
   color: var(--color-primary);
