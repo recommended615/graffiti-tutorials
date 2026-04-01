@@ -65,6 +65,12 @@ header {
   letter-spacing: -0.5px;
 }
 
+.logo-img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
 nav a {
   margin-left: 28px;
   font-weight: 600;
@@ -82,9 +88,11 @@ nav a:hover {
    =========================== */
 .hero {
   background: linear-gradient(135deg, #ff5c35 0%, #ff8c42 60%, #ffe100 100%);
+  background-blend-mode: multiply;
   color: #fff;
   padding: 100px 0 80px;
   text-align: center;
+  position: relative;
 }
 
 .hero h1 {
@@ -191,6 +199,16 @@ nav a:hover {
   box-shadow: 0 8px 28px rgba(0,0,0,0.12);
 }
 
+.card-img {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  background-color: var(--color-light);
+  background-size: cover;
+  background-position: center;
+  border: 2px dashed var(--color-border);
+}
+
 .card-img.placeholder {
   font-size: 3rem;
   background: var(--color-light);
@@ -230,17 +248,13 @@ nav a:hover {
 }
 
 .placeholder-large {
-  font-size: 5rem;
-  background: var(--color-light);
   min-width: 300px;
   height: 300px;
   border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed var(--color-border);
   flex-shrink: 0;
-  /* Replace with: background-image: url('images/about.jpg'); background-size: cover; */
+  background-size: cover;
+  background-position: center;
+  background-color: var(--color-light);
 }
 
 .sobre-text h2 {
