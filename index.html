@@ -17,11 +17,12 @@
         <a href="#servicios">Servicios</a>
         <a href="#sobre-nosotros">Nosotros</a>
         <a href="#contacto">Contacto</a>
+        <a href="game.html">🕹️ Jugar</a>
       </nav>
       <div class="wallet-area">
         <button id="walletBtn" class="btn btn-wallet" onclick="connectWallet()">🔮 Conectar Wallet</button>
         <div id="walletInfo" class="wallet-info" style="display:none;">
-          <span id="walletAddress" class="wallet-address"></span>
+          <a href="cabinet.html" id="walletAddress" class="wallet-address"></a>
           <span id="walletBalance" class="wallet-balance"></span>
           <button class="btn btn-wallet-disconnect" onclick="disconnectWallet()">✕</button>
         </div>
@@ -128,7 +129,7 @@
 
   async function updateWalletUI(pubkey) {
     const short = pubkey.slice(0, 4) + '...' + pubkey.slice(-4);
-    document.getElementById('walletAddress').textContent = short;
+    document.getElementById('walletAddress').textContent = '👤 ' + short;
     document.getElementById('walletBalance').textContent = '⏳';
     document.getElementById('walletBtn').style.display = 'none';
     document.getElementById('walletInfo').style.display = 'flex';

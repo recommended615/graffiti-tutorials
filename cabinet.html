@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Cabina — Graffiti Tutorials Valencia</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+  <style>
+    body { background: #0d0d1a; color: #f0f0f0; }
+
+    .cabinet-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Connect screen ── */
+    #connectScreen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    #connectScreen h1 { font-size: 2rem; font-weight: 900; }
+    #connectScreen p { color: #999; font-size: 1rem; max-width: 420px; }
+    #connectScreen .btn-wallet-big {
+      background: #ab9ff2;
+      color: #0d0d1a;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    #connectScreen .btn-wallet-big:hover { background: #9b8ee0; transform: translateY(-2px); }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; flex: 1; flex-direction: column; }
+
+    .cab-header {
+      background: #11112a;
+      border-bottom: 2px solid #1e1e44;
+      padding: 18px 0;
+    }
+    .cab-header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .cab-logo { font-size: 1.2rem; font-weight: 900; color: #ff5c35; }
+    .cab-logo a { color: #ff5c35; text-decoration: none; }
+    .cab-actions { display: flex; align-items: center; gap: 12px; }
+    .cab-address-badge {
+      background: #1e1e44;
+      color: #ab9ff2;
+      font-family: monospace;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 50px;
+    }
+    .btn-disconnect {
+      background: transparent;
+      border: 2px solid #444;
+      color: #aaa;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-disconnect:hover { border-color: #ff5c35; color: #ff5c35; }
+
+    .cab-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      width: 100%;
+    }
+
+    .cab-greeting {
+      font-size: 1.6rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .cab-greeting span { color: #ab9ff2; }
+    .cab-sub { color: #888; margin-bottom: 36px; font-size: 0.95rem; }
+
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .stat-card {
+      background: #11112a;
+      border: 1.5px solid #1e1e44;
+      border-radius: 16px;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .stat-card:hover { border-color: #ab9ff2; transform: translateY(-2px); }
+    .stat-icon { font-size: 1.8rem; }
+    .stat-label { color: #888; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-value { font-size: 1.6rem; font-weight: 900; color: #fff; }
+    .stat-sub { color: #666; font-size: 0.8rem; }
+
+    /* ── Sections ── */
+    .cab-section { margin-bottom: 40px; }
+    .cab-section h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 18px; color: #ddd; border-left: 4px solid #ff5c35; padding-left: 12px; }
+
+    /* NFT / token list */
+    .token-list { display: flex; flex-direction: column; gap: 12px; }
+    .token-row {
+      background: #11112a;
+      border: 1.5px solid #1e1e44;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .token-row .tok-left { display: flex; align-items: center; gap: 14px; }
+    .tok-icon { font-size: 1.5rem; }
+    .tok-name { font-weight: 700; font-size: 0.95rem; }
+    .tok-addr { color: #666; font-family: monospace; font-size: 0.78rem; }
+    .tok-amount { font-weight: 800; color: #ffe100; font-size: 1rem; }
+    .tok-usd { color: #777; font-size: 0.8rem; }
+    .empty-note { color: #555; font-size: 0.9rem; padding: 18px 0; }
+
+    /* Transactions */
+    .tx-list { display: flex; flex-direction: column; gap: 10px; }
+    .tx-row {
+      background: #11112a;
+      border: 1.5px solid #1e1e44;
+      border-radius: 12px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.88rem;
+    }
+    .tx-sig { font-family: monospace; color: #ab9ff2; font-size: 0.82rem; }
+    .tx-sig a { color: #ab9ff2; text-decoration: none; }
+    .tx-sig a:hover { text-decoration: underline; }
+    .tx-slot { color: #666; font-size: 0.78rem; }
+    .tx-status { font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; background: rgba(0,200,100,0.12); color: #00c864; }
+
+    /* Badges */
+    .badges { display: flex; flex-wrap: wrap; gap: 14px; }
+    .badge {
+      background: #1a1a40;
+      border: 2px solid #2a2a60;
+      border-radius: 16px;
+      padding: 14px 20px;
+      text-align: center;
+      min-width: 110px;
+      transition: border-color 0.2s;
+    }
+    .badge.earned { border-color: #ffe100; }
+    .badge .badge-icon { font-size: 2rem; }
+    .badge .badge-name { font-size: 0.75rem; font-weight: 700; margin-top: 6px; color: #bbb; }
+    .badge.earned .badge-name { color: #ffe100; }
+    .badge.locked .badge-icon { filter: grayscale(1); opacity: 0.35; }
+    .badge.locked .badge-name { color: #555; }
+
+    /* Loader spinner */
+    .loader { display: inline-block; width: 18px; height: 18px; border: 2.5px solid #333; border-top-color: #ab9ff2; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .stat-value { font-size: 1.25rem; }
+      .cab-greeting { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cabinet-wrap">
+
+  <!-- ══ NOT CONNECTED ══ -->
+  <div id="connectScreen">
+    <div style="font-size:3.5rem">🎨</div>
+    <h1>Mi Cabina</h1>
+    <p>Conecta tu wallet Phantom para ver tu perfil, saldo SOL, tokens y actividad reciente.</p>
+    <button class="btn-wallet-big" onclick="connectWallet()">🔮 Conectar con Phantom</button>
+    <a href="index.html" style="color:#555;font-size:0.9rem;margin-top:10px">← Volver al sitio</a>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div id="dashboard">
+    <div class="cab-header">
+      <div class="cab-header-inner">
+        <div class="cab-logo"><a href="index.html">🎨 Graffiti Tutorials</a></div>
+        <div class="cab-actions">
+          <div class="cab-address-badge" id="addrBadge">…</div>
+          <button class="btn-disconnect" onclick="disconnect()">Desconectar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cab-content">
+      <div class="cab-greeting">Hola, <span id="shortAddr">…</span> 👋</div>
+      <div class="cab-sub" id="netLabel">Red: Mainnet Beta</div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">◎</div>
+          <div class="stat-label">Saldo SOL</div>
+          <div class="stat-value" id="statSol"><span class="loader"></span></div>
+          <div class="stat-sub" id="statSolUsd">cargando…</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🪙</div>
+          <div class="stat-label">Tokens SPL</div>
+          <div class="stat-value" id="statTokens">—</div>
+          <div class="stat-sub">cuentas de token</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-label">Transacciones</div>
+          <div class="stat-value" id="statTx">—</div>
+          <div class="stat-sub">recientes cargadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏅</div>
+          <div class="stat-label">Nivel</div>
+          <div class="stat-value" id="statLevel">—</div>
+          <div class="stat-sub" id="statLevelSub">calculando…</div>
+        </div>
+      </div>
+
+      <!-- Tokens -->
+      <div class="cab-section">
+        <h2>🪙 Tokens SPL</h2>
+        <div class="token-list" id="tokenList">
+          <div class="empty-note"><span class="loader"></span> Cargando tokens…</div>
+        </div>
+      </div>
+
+      <!-- Transactions -->
+      <div class="cab-section">
+        <h2>📋 Actividad reciente</h2>
+        <div class="tx-list" id="txList">
+          <div class="empty-note"><span class="loader"></span> Cargando transacciones…</div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="cab-section">
+        <h2>🏅 Logros</h2>
+        <div class="badges" id="badgeList">—</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const RPC = 'https://api.mainnet-beta.solana.com';
+let pubkeyStr = null;
+
+async function connectWallet() {
+  if (!window.solana || !window.solana.isPhantom) {
+    alert('Phantom Wallet no encontrado.\nInstálalo en https://phantom.app');
+    return;
+  }
+  try {
+    const resp = await window.solana.connect();
+    pubkeyStr = resp.publicKey.toString();
+    showDashboard(pubkeyStr);
+    loadAll(pubkeyStr);
+  } catch(e) { console.error(e); }
+}
+
+function disconnect() {
+  if (window.solana?.disconnect) window.solana.disconnect();
+  pubkeyStr = null;
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('connectScreen').style.display = 'flex';
+}
+
+function shortAddr(addr) { return addr.slice(0,6)+'…'+addr.slice(-4); }
+
+function showDashboard(addr) {
+  document.getElementById('connectScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'flex';
+  document.getElementById('addrBadge').textContent = shortAddr(addr);
+  document.getElementById('shortAddr').textContent = shortAddr(addr);
+}
+
+async function rpc(method, params) {
+  const res = await fetch(RPC, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({jsonrpc:'2.0',id:1,method,params})
+  });
+  return (await res.json()).result;
+}
+
+async function loadAll(addr) {
+  loadSol(addr);
+  loadTokens(addr);
+  loadTx(addr);
+}
+
+async function loadSol(addr) {
+  try {
+    const conn = new solanaWeb3.Connection(RPC,'confirmed');
+    const pk   = new solanaWeb3.PublicKey(addr);
+    const lam  = await conn.getBalance(pk);
+    const sol  = (lam / solanaWeb3.LAMPORTS_PER_SOL).toFixed(4);
+    document.getElementById('statSol').textContent = sol + ' SOL';
+
+    // Fetch SOL price from CoinGecko (no key needed)
+    try {
+      const pr = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+      const pd = await pr.json();
+      const usd = (parseFloat(sol) * pd.solana.usd).toFixed(2);
+      document.getElementById('statSolUsd').textContent = '≈ $' + usd + ' USD';
+    } catch(_) {
+      document.getElementById('statSolUsd').textContent = '';
+    }
+
+    // Level
+    const s = parseFloat(sol);
+    let lvl, lsub;
+    if (s < 0.1)      { lvl='Novato 🖊️'; lsub='< 0.1 SOL'; }
+    else if (s < 1)   { lvl='Bomber 🎨'; lsub='0.1–1 SOL'; }
+    else if (s < 10)  { lvl='Writer ✍️'; lsub='1–10 SOL'; }
+    else if (s < 100) { lvl='King 👑'; lsub='10–100 SOL'; }
+    else              { lvl='Legend 🏆'; lsub='100+ SOL'; }
+    document.getElementById('statLevel').textContent = lvl;
+    document.getElementById('statLevelSub').textContent = lsub;
+
+    updateBadges(s);
+  } catch(e) {
+    document.getElementById('statSol').textContent = 'Error';
+    console.error(e);
+  }
+}
+
+async function loadTokens(addr) {
+  try {
+    const res = await rpc('getTokenAccountsByOwner', [
+      addr,
+      {programId:'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'},
+      {encoding:'jsonParsed'}
+    ]);
+    const accounts = res?.value || [];
+    document.getElementById('statTokens').textContent = accounts.length;
+
+    const list = document.getElementById('tokenList');
+    if (accounts.length === 0) {
+      list.innerHTML = '<div class="empty-note">No se encontraron tokens SPL en esta wallet.</div>';
+      return;
+    }
+
+    list.innerHTML = accounts.slice(0,20).map(a => {
+      const info = a.account.data.parsed.info;
+      const mint = info.mint;
+      const amt  = info.tokenAmount.uiAmountString ?? '0';
+      const dec  = info.tokenAmount.decimals;
+      return `<div class="token-row">
+        <div class="tok-left">
+          <div class="tok-icon">🪙</div>
+          <div>
+            <div class="tok-name">Token SPL</div>
+            <div class="tok-addr">${mint.slice(0,16)}…</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="tok-amount">${amt}</div>
+          <div class="tok-usd">decimales: ${dec}</div>
+        </div>
+      </div>`;
+    }).join('');
+    if (accounts.length > 20) list.innerHTML += `<div class="empty-note">…y ${accounts.length-20} más</div>`;
+  } catch(e) {
+    document.getElementById('tokenList').innerHTML = '<div class="empty-note">Error al cargar tokens.</div>';
+  }
+}
+
+async function loadTx(addr) {
+  try {
+    const sigs = await rpc('getSignaturesForAddress', [addr, {limit:8}]);
+    document.getElementById('statTx').textContent = sigs?.length ?? 0;
+    const list = document.getElementById('txList');
+    if (!sigs || sigs.length === 0) {
+      list.innerHTML = '<div class="empty-note">No se encontraron transacciones recientes.</div>';
+      return;
+    }
+    list.innerHTML = sigs.map(s => {
+      const sig  = s.signature;
+      const slot = s.slot;
+      const err  = s.err;
+      const ts   = s.blockTime ? new Date(s.blockTime*1000).toLocaleString('es-ES') : '—';
+      return `<div class="tx-row">
+        <div>
+          <div class="tx-sig"><a href="https://solscan.io/tx/${sig}" target="_blank" rel="noopener">${sig.slice(0,14)}…${sig.slice(-6)}</a></div>
+          <div class="tx-slot">Slot ${slot} · ${ts}</div>
+        </div>
+        <div class="tx-status">${err ? '❌ Error' : '✅ OK'}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('txList').innerHTML = '<div class="empty-note">Error al cargar transacciones.</div>';
+  }
+}
+
+function updateBadges(sol) {
+  const badges = [
+    {icon:'🖊️', name:'Novato', earned: sol >= 0},
+    {icon:'🎨', name:'Primer SOL', earned: sol >= 1},
+    {icon:'✍️', name:'Writer', earned: sol >= 10},
+    {icon:'👑', name:'King', earned: sol >= 100},
+    {icon:'🏆', name:'Legend', earned: sol >= 1000},
+    {icon:'🕹️', name:'Gamer', earned: true}, // always earned for visiting
+  ];
+  document.getElementById('badgeList').innerHTML = badges.map(b => `
+    <div class="badge ${b.earned?'earned':'locked'}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>`).join('');
+}
+
+// Auto-connect if already trusted
+window.addEventListener('load', async () => {
+  if (window.solana?.isPhantom) {
+    try {
+      const resp = await window.solana.connect({onlyIfTrusted: true});
+      pubkeyStr = resp.publicKey.toString();
+      showDashboard(pubkeyStr);
+      loadAll(pubkeyStr);
+    } catch(_) {}
+  }
+});
+</script>
+
+</body>
+</html>

@@ -122,6 +122,11 @@ nav a:hover {
 .wallet-address {
   color: #555;
   font-family: monospace;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.wallet-address:hover {
+  color: #ab9ff2;
 }
 
 .wallet-balance {
