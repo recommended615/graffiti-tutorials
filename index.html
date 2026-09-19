@@ -22,7 +22,13 @@
     .form-reserva textarea { min-height: 110px; resize: vertical; }
     .form-reserva .fila { display: flex; gap: 16px; }
     .form-reserva .fila .campo { flex: 1; }
-    .form-reserva button { width: 100%; cursor: pointer; border: none; font-size: 16px; }
+    .form-reserva .enviar {
+      display: block; margin: 8px auto 0; padding: 14px 38px;
+      background: #f4512c; color: #fff; border: none; border-radius: 999px;
+      font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer;
+      transition: background .15s ease;
+    }
+    .form-reserva .enviar:hover { background: #d9411f; }
     .form-reserva .nota { font-size: 13px; opacity: .7; margin-top: 12px; text-align: center; }
     .oculto { position: absolute; left: -9999px; }
     @media (max-width: 600px) { .form-reserva .fila { display: block; } }
@@ -157,8 +163,8 @@
           <textarea id="mensaje" name="mensaje" placeholder="Edad de los participantes, lugar, ideas…"></textarea>
         </div>
 
-        <button type="submit" class="btn">Enviar solicitud</button>
-        <p class="nota">También puedes escribirnos por WhatsApp al +34 672 821 254</p>
+        <button type="submit" class="enviar">Enviar solicitud</button>
+        <p class="nota">¿Prefieres escribirnos directamente?</p>
       </form>
 
       <div class="contact-buttons">
@@ -175,7 +181,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      <p>© 2025 Graffiti Tutorials Valencia · Arte urbano para todos</p>
+      <p>© 2026 Graffiti Tutorials Valencia · Arte urbano para todos</p>
       <div class="social">
         <a href="https://www.instagram.com/graffititutorials/" target="_blank">Instagram</a>
         <a href="https://www.facebook.com/profile.php?id=61578230352263" target="_blank">Facebook</a>
@@ -183,19 +189,5 @@
     </div>
   </footer>
 
-</body>
-</html>
-      <div class="contact-buttons">
-        <a href="https://wa.me/34672821254" class="btn btn-whatsapp" target="_blank">
-          💬 WhatsApp
-        </a>
-        <a href="tel:+34672821254" class="btn btn-phone">
-          📞 +34 672 821 254
-        </a>
-      </div>
-    </div>
-  </section>
-
- 
 </body>
 </html>
