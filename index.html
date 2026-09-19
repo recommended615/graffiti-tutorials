@@ -164,7 +164,7 @@
         </div>
 
         <button type="submit" class="enviar">Enviar solicitud</button>
-        <p class="nota">¿Prefieres escribirnos directamente?</p>
+        <p class="nota">Al enviar te abriremos WhatsApp con tu solicitud lista para mandarnos.</p>
       </form>
 
       <div class="contact-buttons">
@@ -188,6 +188,44 @@
       </div>
     </div>
   </footer>
+  <script>
+    (function () {
+      var WHATSAPP = '34672821254';
+      var form = document.querySelector('form[name="reserva"]');
+      if (!form) return;
+
+      function texto(d) {
+        var l = [];
+        l.push('Hola! Acabo de enviar una solicitud desde la web.');
+        l.push('');
+        if (d.get('nombre')) l.push('Nombre: ' + d.get('nombre'));
+        if (d.get('actividad')) l.push('Actividad: ' + d.get('actividad'));
+        if (d.get('fecha')) l.push('Fecha preferida: ' + d.get('fecha'));
+        if (d.get('participantes')) l.push('Participantes: ' + d.get('participantes'));
+        if (d.get('telefono')) l.push('Telefono: ' + d.get('telefono'));
+        if (d.get('email')) l.push('Email: ' + d.get('email'));
+        if (d.get('mensaje')) l.push('', d.get('mensaje'));
+        return l.join('\n');
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var datos = new FormData(form);
+        var boton = form.querySelector('button[type="submit"]');
+        if (boton) { boton.disabled = true; boton.textContent = 'Enviando…'; }
+
+        var destino = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto(datos));
+
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(datos).toString()
+        })
+          .then(function () { window.location.href = destino; })
+          .catch(function () { window.location.href = '/gracias.html'; });
+      });
+    })();
+  </script>
 
 </body>
 </html>
